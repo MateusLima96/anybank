@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from "../../../../node_modules/@angular/common/common_module.d-NEF7UaHr";
+import { TipoTransacao, Transacao } from '../../models/transaction';
+import { KeyValuePipe } from '@angular/common';
 
 @Component({
   selector: 'app-form-nova-transacao',
-  imports: [FormsModule],
+  imports: [FormsModule, KeyValuePipe],
   templateUrl: './form-nova-transacao.component.html',
   styleUrl: './form-nova-transacao.component.css'
 })
@@ -12,7 +13,17 @@ export class FormNovaTransacaoComponent {
   tipoTransacao = "";
   valorTransacao = "";
 
+  transacaoCriada = output<Transacao>();
+
+  tipoTransacaoEnum = TipoTransacao;
+
   aoSubmeter() {
+    const transacao = new Transacao(
+      this.tipoTransacao as TipoTransacao,
+      Number(this.valorTransacao)
+    )
+    this.transacaoCriada.emit(transacao);
+
     this.tipoTransacao = "";
     this.valorTransacao = "";
   }
